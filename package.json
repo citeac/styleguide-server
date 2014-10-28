@@ -1,0 +1,19 @@
+{
+  "name": "styleguide-server",
+  "version": "0.1.0",
+  "private": "true",
+  "dependencies": {
+    "express": "4.9.8",
+    "body-parser": "1.9.1",
+    "only": "0.0.2"
+  },
+  "devDependencies": {
+    "styleguide": "git+ssh://git@github.com:nickjackson/styleguide.git",
+    "supertest": "*",
+    "mocha": "*",
+    "expect.js": "*"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
