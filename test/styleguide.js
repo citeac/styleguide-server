@@ -5,7 +5,7 @@ var version = require('../package.json').version;
 process.env.STYLEGUIDE = './test/fixture/guide';
 var app = require('../');
 
-describe('styleguide-runner', function(){
+describe('styleguide-server', function(){
   describe('GET /', function(){
     it('should respond correctly', function(done){
       request(app)
