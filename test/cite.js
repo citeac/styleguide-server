@@ -2,39 +2,51 @@ var request = require('supertest');
 var expect = require('expect.js');
 var version = require('../package.json').version;
 
-process.env.STYLEGUIDE = './test/fixture/guide';
+var guides = require('../guides');
+guides[0] = require('./fixture/guide')
 var app = require('../');
 
-describe('styleguide-server', function(){
+describe('cite-js-server', function(){
   describe('GET /', function(){
     it('should respond correctly', function(done){
       request(app)
         .get('/')
-        .expect('x-Styleguide-ID', 'test-guide')
-        .expect('x-Styleguide-Version', '0.1.0')
-        .expect('x-Styleguide-Server-Version', version)
+        .expect('x-Cite-JS-Server-Version', version)
         .expect('Hello World!')
         .expect(200, done)
     })
   })
 
-  describe('GET /meta', function(){
+  describe('GET /guides', function(){
     it('should respond correctly', function(done){
       request(app)
-        .get('/meta')
+        .get('/guides')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
-          expect(res.body).to.eql({"id":"test-guide","title":"Test Guide","version":"0.1.0"})
+          expect(res.body[0]).to.eql({ id: 'test-guide', title: 'Test Guide', version: '0.1.0' })
           done();
         })
     })
   })
 
-  describe('GET /styles', function(){
+  describe('GET /guides/:id/meta', function(){
+    it('should respond correctly', function(done){
+      request(app)
+        .get('/guides/test-guide')
+        .expect(200)
+        .end(function(err, res){
+          if (err) return done(err);
+          expect(res.body).to.eql({ id: 'test-guide', title: 'Test Guide', version: '0.1.0' })
+          done();
+        })
+    })
+  })
+
+  describe('GET /guides/:id/styles', function(){
     it('should get all correctly', function(done){
       request(app)
-        .get('/styles')
+        .get('/guides/test-guide/styles')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -49,7 +61,7 @@ describe('styleguide-server', function(){
 
     it('should find by description', function(done){
       request(app)
-        .get('/styles?search=different+style')
+        .get('/guides/test-guide/styles?search=different+style')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -62,7 +74,7 @@ describe('styleguide-server', function(){
 
     it('should fail by description', function(done){
       request(app)
-        .get('/styles?search=whatever')
+        .get('/guides/test-guide/styles?search=whatever')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -72,10 +84,10 @@ describe('styleguide-server', function(){
     })
   })
 
-  describe('GET /styles/:id', function(){
+  describe('GET /guides/:gid/styles/:id', function(){
     it('finds style by id', function(done){
       request(app)
-        .get('/styles/TEST002')
+        .get('/guides/test-guide/styles/TEST002')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -93,18 +105,17 @@ describe('styleguide-server', function(){
   })
 
 
-  describe('POST /run', function(){
+  describe('POST /guides/:gid/styles/:id/run', function(){
     it('fails', function(done){
       request(app)
-        .post('/run')
-        .send({id:'1234'})
+        .post('/guides/test-guide/styles/foo/run')
         .expect(404, done)
     })
 
     it('should return at least error', function(done){
       request(app)
-        .post('/run')
-        .send({id:'TEST001'})
+        .post('/guides/test-guide/styles/TEST001/run')
+        .send({})
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -121,8 +132,8 @@ describe('styleguide-server', function(){
 
     it('should not return at least error', function(done){
       request(app)
-        .post('/run')
-        .send({id:'TEST001', data: { title: 'foo bar', doi: 'baz'}})
+        .post('/guides/test-guide/styles/TEST001/run')
+        .send({data: { title: 'foo bar', doi: 'baz'}})
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -138,8 +149,8 @@ describe('styleguide-server', function(){
 
     it('should have correct validators and errors when `.if()` is triggered', function(done){
       request(app)
-        .post('/run')
-        .send({id:'TEST001', data: {title: 'f', publisher:'abc'}})
+        .post('/guides/test-guide/styles/TEST001/run')
+        .send({data: {title: 'f', publisher:'abc'}})
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -158,8 +169,8 @@ describe('styleguide-server', function(){
 
     it('should have correct validators and errors when `.if()` is triggered', function(done){
       request(app)
-        .post('/run')
-        .send({id:'TEST001', data: {title: 'f', publisher:'abc', doi:'baz'}})
+        .post('/guides/test-guide/styles/TEST001/run')
+        .send({data: {title: 'f', publisher:'abc', doi:'baz'}})
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);

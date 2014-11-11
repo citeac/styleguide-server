@@ -5,7 +5,8 @@
   "dependencies": {
     "express": "4.9.8",
     "body-parser": "1.9.1",
-    "only": "0.0.2"
+    "only": "0.0.2",
+    "apa-6th": "git+https://1a68d7d361a7d27e1d6f1ab429e320aa596cc7b0:x-oauth-basic@github.com/nickjackson/apa-6th"
   },
   "devDependencies": {
     "cite": "*",
