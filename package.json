@@ -8,7 +8,7 @@
     "only": "0.0.2"
   },
   "devDependencies": {
-    "styleguide": "git+ssh://git@github.com:nickjackson/styleguide.git",
+    "cite": "*",
     "supertest": "*",
     "mocha": "*",
     "expect.js": "*"

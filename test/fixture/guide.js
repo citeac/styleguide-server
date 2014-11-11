@@ -3,7 +3,7 @@
  * Dependencies
  */
 
-var StyleGuide = module.exports = require('styleguide')();
+var StyleGuide = module.exports = require('cite')();
 
 
 /*!
