@@ -5,10 +5,10 @@ var only = require('only');
 var version = require('./package.json').version;
 
 
-// map each guide to its id
-var guides = require('./guides');
+// map each style to its id
+var styles = require('./styles');
 var map = {};
-guides.forEach(function(g){ map[g.id] = g });
+styles.forEach(function(g){ map[g.id] = g });
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,29 +28,29 @@ app.get('/', function(req, res) {
 });
 
 
-// useful route to show available guides
-app.get('/guides', function(req, res) {
-  var mapped = guides.map(function(a){ return only(a, 'id title version')});
+// useful route to show available styles
+app.get('/styles', function(req, res) {
+  var mapped = styles.map(function(a){ return only(a, 'id title version')});
   res.send(mapped);
 });
 
 
 // get meta information regarding the styleguide
-app.get('/guides/:id', function(req, res) {
-  var guide = map[req.params.id];
-  if (!guide) return res.status(404).send('no guide with id: "' + req.params.id + '"');
-  res.send(only(guide, 'id title version'));
+app.get('/styles/:id', function(req, res) {
+  var style = map[req.params.id];
+  if (!style) return res.status(404).send('no style with id: "' + req.params.id + '"');
+  res.send(only(style, 'id title version'));
 });
 
 
 
-// get available styles
-app.get('/guides/:id/styles', function(req, res) {
-  var guide = map[req.params.id];
-  if (!guide) return res.status(404).send('no guide with id: "' + req.params.id + '"');
+// get available types
+app.get('/styles/:id/types', function(req, res) {
+  var style = map[req.params.id];
+  if (!style) return res.status(404).send('no style with id: "' + req.params.id + '"');
 
   var arr = [];
-  var styles = guide.styles;
+  var styles = style.styles;
   var q = req.query;
 
   for (var key in styles) {
@@ -77,26 +77,28 @@ app.get('/guides/:id/styles', function(req, res) {
 
 
 // run style with data and return result
-app.post('/guides/:gid/styles/:id/run', function(req, res, next){
-  var guide = map[req.params.gid];
-  if (!guide) return res.status(404).send('no guide with id: "' + req.params.gid + '"');
+app.post('/styles/:gid/types/:id/run', function(req, res, next){
+  var style = map[req.params.gid];
+  if (!style) return res.status(404).send('no style with id: "' + req.params.gid + '"');
 
-  var style = guide.styles[req.params.id];
-  if (!style) return res.status(404).send('style not found');
+  var type = style.styles[req.params.id];
+  if (!type) return res.status(404).send('type not found');
 
   var data = req.body.data;
-  var runner = guide.run(style, data);
+  var runner = style.run(type, data);
   res.send(runner);
 })
 
-// get more specific information about styles
-app.get('/guides/:gid/styles/:id', function(req, res) {
-  var guide = map[req.params.gid];
-  if (!guide) return res.status(404).send('no guide with id: "' + req.params.gid + '"');
 
-  var style = guide.styles[req.params.id];
-  if (!style) return res.status(404).send('style not found');
-  res.send(style);
+
+// get more specific information about styles
+app.get('/styles/:gid/types/:id', function(req, res) {
+  var style = map[req.params.gid];
+  if (!style) return res.status(404).send('no style with id: "' + req.params.gid + '"');
+
+  var type = style.styles[req.params.id];
+  if (!type) return res.status(404).send('type not found');
+  res.send(type);
 });
 
 

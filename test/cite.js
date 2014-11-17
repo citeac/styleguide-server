@@ -2,7 +2,7 @@ var request = require('supertest');
 var expect = require('expect.js');
 var version = require('../package.json').version;
 
-var guides = require('../guides');
+var guides = require('../styles');
 guides[0] = require('./fixture/guide')
 var app = require('../');
 
@@ -17,10 +17,10 @@ describe('cite-js-server', function(){
     })
   })
 
-  describe('GET /guides', function(){
+  describe('GET /styles', function(){
     it('should respond correctly', function(done){
       request(app)
-        .get('/guides')
+        .get('/styles')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -30,10 +30,10 @@ describe('cite-js-server', function(){
     })
   })
 
-  describe('GET /guides/:id/meta', function(){
+  describe('GET /styles/:id', function(){
     it('should respond correctly', function(done){
       request(app)
-        .get('/guides/test-guide')
+        .get('/styles/test-guide')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -43,10 +43,10 @@ describe('cite-js-server', function(){
     })
   })
 
-  describe('GET /guides/:id/styles', function(){
+  describe('GET /styles/:id/types', function(){
     it('should get all correctly', function(done){
       request(app)
-        .get('/guides/test-guide/styles')
+        .get('/styles/test-guide/types')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -61,7 +61,7 @@ describe('cite-js-server', function(){
 
     it('should find by description', function(done){
       request(app)
-        .get('/guides/test-guide/styles?search=different+style')
+        .get('/styles/test-guide/types?search=different+style')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -74,7 +74,7 @@ describe('cite-js-server', function(){
 
     it('should fail by description', function(done){
       request(app)
-        .get('/guides/test-guide/styles?search=whatever')
+        .get('/styles/test-guide/types?search=whatever')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -84,10 +84,10 @@ describe('cite-js-server', function(){
     })
   })
 
-  describe('GET /guides/:gid/styles/:id', function(){
+  describe('GET /styles/:gid/types/:id', function(){
     it('finds style by id', function(done){
       request(app)
-        .get('/guides/test-guide/styles/TEST002')
+        .get('/styles/test-guide/types/TEST002')
         .expect(200)
         .end(function(err, res){
           if (err) return done(err);
@@ -99,22 +99,22 @@ describe('cite-js-server', function(){
 
     it('fails', function(done){
       request(app)
-        .get('/styles/sdfknsldk')
+        .get('/types/sdfknsldk')
         .expect(404, done)
     })
   })
 
 
-  describe('POST /guides/:gid/styles/:id/run', function(){
+  describe('POST /styles/:gid/types/:id/run', function(){
     it('fails', function(done){
       request(app)
-        .post('/guides/test-guide/styles/foo/run')
+        .post('/styles/test-guide/types/foo/run')
         .expect(404, done)
     })
 
     it('should return at least error', function(done){
       request(app)
-        .post('/guides/test-guide/styles/TEST001/run')
+        .post('/styles/test-guide/types/TEST001/run')
         .send({})
         .expect(200)
         .end(function(err, res){
@@ -132,7 +132,7 @@ describe('cite-js-server', function(){
 
     it('should not return at least error', function(done){
       request(app)
-        .post('/guides/test-guide/styles/TEST001/run')
+        .post('/styles/test-guide/types/TEST001/run')
         .send({data: { title: 'foo bar', doi: 'baz'}})
         .expect(200)
         .end(function(err, res){
@@ -149,7 +149,7 @@ describe('cite-js-server', function(){
 
     it('should have correct validators and errors when `.if()` is triggered', function(done){
       request(app)
-        .post('/guides/test-guide/styles/TEST001/run')
+        .post('/styles/test-guide/types/TEST001/run')
         .send({data: {title: 'f', publisher:'abc'}})
         .expect(200)
         .end(function(err, res){
@@ -169,7 +169,7 @@ describe('cite-js-server', function(){
 
     it('should have correct validators and errors when `.if()` is triggered', function(done){
       request(app)
-        .post('/guides/test-guide/styles/TEST001/run')
+        .post('/styles/test-guide/types/TEST001/run')
         .send({data: {title: 'f', publisher:'abc', doi:'baz'}})
         .expect(200)
         .end(function(err, res){
