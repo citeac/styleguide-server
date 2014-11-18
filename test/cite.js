@@ -52,33 +52,9 @@ describe('cite-js-server', function(){
           if (err) return done(err);
           expect(res.body).to.have.length(2);
           expect(res.body[0].id).to.eql('TEST001')
-          expect(res.body[0]).to.only.have.keys('id', 'title', 'description', 'sourceType')
+          expect(res.body[0]).to.only.have.keys('id', 'title', 'description', 'types')
           expect(res.body[1].id).to.eql('TEST002')
-          expect(res.body[1]).to.only.have.keys('id', 'title', 'description', 'sourceType')
-          done();
-        })
-    })
-
-    it('should find by description', function(done){
-      request(app)
-        .get('/styles/test-guide/types?search=different+style')
-        .expect(200)
-        .end(function(err, res){
-          if (err) return done(err);
-          expect(res.body).to.have.length(1);
-          expect(res.body[0].id).to.eql('TEST002')
-          expect(res.body[0]).to.only.have.keys('id', 'title', 'description', 'sourceType')
-          done();
-        })
-    })
-
-    it('should fail by description', function(done){
-      request(app)
-        .get('/styles/test-guide/types?search=whatever')
-        .expect(200)
-        .end(function(err, res){
-          if (err) return done(err);
-          expect(res.body).to.have.length(0);
+          expect(res.body[1]).to.only.have.keys('id', 'title', 'description', 'types')
           done();
         })
     })
@@ -92,7 +68,7 @@ describe('cite-js-server', function(){
         .end(function(err, res){
           if (err) return done(err);
           expect(res.body.id).to.eql('TEST002')
-          expect(res.body).to.only.have.keys('id', 'title', 'description', 'code', 'tags', 'sourceType')
+          expect(res.body).to.only.have.keys('id', 'title', 'description', 'code', 'tags', 'types')
           done();
         })
     })

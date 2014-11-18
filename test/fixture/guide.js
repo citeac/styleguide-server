@@ -23,4 +23,4 @@ StyleGuide.config({
 
 StyleGuide
 .path(__dirname)
-.add('Example', './styles');
+.load('./types');

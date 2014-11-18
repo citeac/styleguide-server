@@ -9,7 +9,7 @@
     "apa-6th": "git+https://1a68d7d361a7d27e1d6f1ab429e320aa596cc7b0:x-oauth-basic@github.com/nickjackson/apa-6th"
   },
   "devDependencies": {
-    "cite": "*",
+    "cite": "0.3.0",
     "supertest": "*",
     "mocha": "*",
     "expect.js": "*"

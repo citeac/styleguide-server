@@ -5,6 +5,7 @@ module.exports = exports = [];
  * A Style
  *
  * @id TEST001
+ * @type Book
  */
 
 exports.push(function(){
@@ -26,6 +27,7 @@ exports.push(function(){
  * a different style
  *
  * @id TEST002
+ * @type Book
  */
 
 exports.push(function(){

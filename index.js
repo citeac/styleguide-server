@@ -50,44 +50,15 @@ app.get('/styles/:id/types', function(req, res) {
   if (!style) return res.status(404).send('no style with id: "' + req.params.id + '"');
 
   var arr = [];
-  var styles = style.styles;
-  var q = req.query;
+  var types = style.types;
 
-  for (var key in styles) {
-    var style = styles[key];
-
-    if (q.sourcetype && style.sourceType !== q.sourcetype) {
-      continue;
-    }
-
-    if (q.search) {
-      var str = q.search.toLowerCase().replace('+', ' ');
-      var title = style.title.toLowerCase();
-      var desc = style.description.toLowerCase();
-
-      if (!~title.indexOf(str) && !~desc.indexOf(str)) continue;
-    }
-
-    arr.push(only(style, 'id title description sourceType'));
+  for (var key in types) {
+    var type = types[key];
+    arr.push(only(type, 'id title description types'));
   }
 
   res.send(arr);
 });
-
-
-
-// run style with data and return result
-app.post('/styles/:gid/types/:id/run', function(req, res, next){
-  var style = map[req.params.gid];
-  if (!style) return res.status(404).send('no style with id: "' + req.params.gid + '"');
-
-  var type = style.styles[req.params.id];
-  if (!type) return res.status(404).send('type not found');
-
-  var data = req.body.data;
-  var runner = style.run(type, data);
-  res.send(runner);
-})
 
 
 
@@ -96,11 +67,24 @@ app.get('/styles/:gid/types/:id', function(req, res) {
   var style = map[req.params.gid];
   if (!style) return res.status(404).send('no style with id: "' + req.params.gid + '"');
 
-  var type = style.styles[req.params.id];
+  var type = style.types[req.params.id];
   if (!type) return res.status(404).send('type not found');
-  res.send(type);
+  res.send(only(type, 'id title description code tags types'));
 });
 
+
+// run style with data and return result
+app.post('/styles/:gid/types/:id/run', function(req, res, next){
+  var style = map[req.params.gid];
+  if (!style) return res.status(404).send('no style with id: "' + req.params.gid + '"');
+
+  var type = style.types[req.params.id];
+  if (!type) return res.status(404).send('type not found');
+
+  var data = req.body.data;
+  var runner = style.run(type, data);
+  res.send(runner);
+})
 
 
 // start server
